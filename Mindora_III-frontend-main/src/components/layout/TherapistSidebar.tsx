@@ -37,13 +37,13 @@ export function TherapistSidebar() {
   }
 
   return (
-    <aside className="flex h-full w-full shrink-0 flex-col self-stretch bg-mindora-sidebar text-white">
-      <div className="flex items-center justify-between px-5 py-5">
+    <aside className="flex h-full min-h-0 w-full shrink-0 flex-col self-stretch bg-mindora-sidebar text-white">
+      <div className="flex shrink-0 items-center justify-between px-5 py-5">
         <MindoraLogo variant="light" size="md" />
         <NotificationBell />
       </div>
 
-      <nav className="flex-1 space-y-0.5 px-3">
+      <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto px-3">
         <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/35">
           Your practice
         </p>
@@ -68,7 +68,7 @@ export function TherapistSidebar() {
         })}
       </nav>
 
-      <div className="space-y-3 px-3 pb-4">
+      <div className="shrink-0 space-y-3 px-3 pb-4">
         <div className="flex items-center gap-2.5 rounded-lg px-1 py-1">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mindora-purple text-xs font-semibold">
             {displayName.slice(0, 2).toUpperCase()}

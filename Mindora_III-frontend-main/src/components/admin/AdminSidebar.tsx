@@ -45,13 +45,13 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="flex h-full w-full shrink-0 flex-col self-stretch gap-6 bg-mindora-sidebar px-3.5 pb-5 pt-6 text-white shadow-[10px_0_26px_rgba(33,29,44,0.22)]">
-      <div className="flex items-center justify-between px-1.5">
+    <aside className="flex h-full min-h-0 w-full shrink-0 flex-col self-stretch gap-6 bg-mindora-sidebar px-3.5 pb-5 pt-6 text-white shadow-[10px_0_26px_rgba(33,29,44,0.22)]">
+      <div className="flex shrink-0 items-center justify-between px-1.5">
         <MindoraLogo variant="light" size="md" />
         <NotificationBell />
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1.5">
+      <nav className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto">
         <p className="mb-1 flex items-center gap-1.5 px-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6d6588]">
           <Shield className="h-3 w-3" /> Admin
         </p>
@@ -81,7 +81,7 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      <div className="flex flex-col gap-3.5">
+      <div className="flex shrink-0 flex-col gap-3.5">
         <div className="flex items-center gap-2.5 rounded-2xl px-2 py-2 transition-shadow hover:shadow-[5px_5px_12px_#171320,-5px_-5px_12px_#2b2638]">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mindora-sidebar-elevated text-xs font-bold text-[#c4b5fd] shadow-[inset_3px_3px_7px_#16131e,inset_-3px_-3px_7px_#302a41]">
             {user?.email.slice(0, 2).toUpperCase() ?? "AD"}
