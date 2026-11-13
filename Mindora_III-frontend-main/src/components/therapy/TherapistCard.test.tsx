@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TherapistCard } from "@/components/therapy/TherapistCard";
 import type { TherapistProfile } from "@/types/domain";
@@ -61,5 +61,24 @@ describe("TherapistCard flip without hover", () => {
       />
     );
     expect(screen.getByRole("button", { name: /not accepting patients/i })).toBeDisabled();
+  });
+});
+
+describe("TherapistCard photo", () => {
+  it("shows the photo, then falls back to the initials avatar when the image fails to load", () => {
+    render(
+      <TherapistCard
+        therapist={{ ...therapist, photoUrl: "http://localhost:8000/api/v1/users/photos/m1.jpg" }}
+        index={0}
+        onBook={jest.fn()}
+      />
+    );
+    const img = screen.getByRole("img", { name: "Dr Uwase Diane" });
+    expect(screen.queryByText("UD")).not.toBeInTheDocument();
+
+    fireEvent.error(img);
+
+    expect(screen.queryByRole("img", { name: "Dr Uwase Diane" })).not.toBeInTheDocument();
+    expect(screen.getByText("UD")).toBeInTheDocument();
   });
 });
