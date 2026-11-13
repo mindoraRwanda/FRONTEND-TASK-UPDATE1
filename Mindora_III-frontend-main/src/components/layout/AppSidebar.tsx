@@ -61,13 +61,13 @@ export function AppSidebar() {
   }
 
   return (
-    <aside className="flex h-full w-full shrink-0 flex-col self-stretch bg-mindora-sidebar text-white">
-      <div className="flex items-center justify-between px-5 py-5">
+    <aside className="flex h-full min-h-0 w-full shrink-0 flex-col self-stretch bg-mindora-sidebar text-white">
+      <div className="flex shrink-0 items-center justify-between px-5 py-5">
         <MindoraLogo variant="light" size="md" href="/today" />
         <NotificationBell />
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1.5">
+      <nav className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#3d3652_transparent]">
         <p className="mb-1 px-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6d6588]">
           Your day
         </p>
@@ -105,7 +105,7 @@ export function AppSidebar() {
         })}
       </nav>
 
-      <div className="flex flex-col gap-3.5">
+      <div className="flex shrink-0 flex-col gap-3.5">
         <div className="rounded-[22px] bg-mindora-sidebar p-4.5 shadow-[6px_6px_14px_#171320,-6px_-6px_14px_#2b2638]">
           <div className="flex items-center gap-2 text-[13.5px] font-bold text-white">
             <AlertTriangle className="h-4 w-4 shrink-0 text-[#e9b8f5]" />
