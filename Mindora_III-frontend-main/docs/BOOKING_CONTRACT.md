@@ -27,7 +27,7 @@ Status of every statement below. Nothing here was tested against the real backen
 - Sessions last 50 minutes; the review step shows `slotStart - slotEnd` as returned.
 - Non-409 4xx responses carry a user-safe `message`, which is shown as-is. 5xx text is never shown.
 - No client-side retry or idempotency key: a retry after a network error could duplicate a booking if the first request actually reached the server. Needs a BE2 answer (idempotency key, or does the server reject the duplicate slot with 409?).
-- A 409 that is *not* a slot conflict (other business rule) would currently be shown as "slot taken". Needs a BE2 answer if other 409 reasons exist.
+- A 409 that is _not_ a slot conflict (other business rule) would currently be shown as "slot taken". Needs a BE2 answer if other 409 reasons exist.
 
 ## How the frontend sees it
 

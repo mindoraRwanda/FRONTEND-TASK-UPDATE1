@@ -8,6 +8,7 @@ All responses were mocked with Playwright `page.route` (patient session, `/ai/ch
 - `chat-inline-notice-375.png` — phone: transcript after dismissing the overlay, with the inline safety notice and its 112 link. The fixed-width sidebar squeezes the chat at this width (existing layout, not part of this change).
 
 ## Checks (all PASS)
+
 - PASS: at 375px, 112 button visible without scrolling
 - PASS: at 375px, crisis line visible without scrolling
 - PASS: 112 button href is `tel:112`; crisis line shows +250 783 974 066
