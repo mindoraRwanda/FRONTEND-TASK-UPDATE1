@@ -5,7 +5,7 @@ import { RouteGuard } from "@/components/auth/RouteGuard";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <RouteGuard requiredRole="PATIENT">
-      <MobileNavShell sidebar={<AppSidebar />} showEmergency logoHref="/today">
+      <MobileNavShell sidebar={<AppSidebar />} logoHref="/today">
         {children}
       </MobileNavShell>
     </RouteGuard>

@@ -6,23 +6,15 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Menu, X } from "lucide-react";
 import { MindoraLogo } from "@/components/brand/MindoraLogo";
 import { Dialog, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
-import { EMERGENCY_HREF, EMERGENCY_NUMBER } from "@/lib/crisis";
 
 interface MobileNavShellProps {
   /** The role's sidebar. Rendered inline on lg+, inside a drawer below lg. */
   sidebar: React.ReactNode;
-  /** Show a persistent "Emergency: 112" link in the mobile top bar (patients). */
-  showEmergency?: boolean;
   logoHref?: string;
   children: React.ReactNode;
 }
 
-export function MobileNavShell({
-  sidebar,
-  showEmergency = false,
-  logoHref,
-  children,
-}: MobileNavShellProps) {
+export function MobileNavShell({ sidebar, logoHref, children }: MobileNavShellProps) {
   const pathname = usePathname();
   // Remember the path the drawer was opened on: navigating elsewhere
   // closes it without needing an effect or per-link callbacks.
@@ -43,14 +35,6 @@ export function MobileNavShell({
         <div className="min-w-0 flex-1">
           <MindoraLogo variant="light" size="sm" showTagline={false} href={logoHref} />
         </div>
-        {showEmergency && (
-          <a
-            href={EMERGENCY_HREF}
-            className="flex h-11 shrink-0 items-center rounded-xl bg-red-600 px-3 text-[13px] font-bold text-white hover:bg-red-700"
-          >
-            Emergency: {EMERGENCY_NUMBER}
-          </a>
-        )}
       </header>
 
       <div className="hidden w-[220px] shrink-0 lg:flex">{sidebar}</div>
