@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
-  bookAppointment,
   cancelAppointment,
   completeAppointment,
   confirmAppointment,
@@ -15,10 +14,12 @@ import {
   fetchTherapistSchedule,
   fetchTherapistTimeOff,
   rateAppointment,
+  submitBooking,
   updateTherapistAvailability,
 } from "@/lib/appointments-api";
+import type { BookingBody } from "@/lib/appointments-api";
 import { ApiError } from "@/lib/api";
-import type { AppointmentStatus, SessionType, WorkingHoursWindow } from "@/types/domain";
+import type { AppointmentStatus, WorkingHoursWindow } from "@/types/domain";
 
 function errorMessage(error: unknown, fallback: string): string {
   return error instanceof ApiError ? error.message : fallback;
@@ -42,19 +43,18 @@ export function useAvailability(therapistId: string | null) {
 export function useBookAppointment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (body: {
-      therapistId: string;
-      slotStart: string;
-      slotEnd: string;
-      sessionType: SessionType;
-    }) => bookAppointment(body),
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["appointments", "mine"] });
+    // Resolves with a BookingOutcome (success | conflict | error) instead of throwing,
+    // so BookingDialog can show a distinct state for each. No toast here - the dialog
+    // renders its own success screen and inline errors.
+    mutationFn: (body: BookingBody) => submitBooking(body),
+    onSuccess: (outcome, variables) => {
+      if (outcome.kind === "error") return;
+      // On a conflict the cached slots are stale, so refetch them as well.
       queryClient.invalidateQueries({ queryKey: ["availability", variables.therapistId] });
-      toast.success("Appointment booked.");
+      if (outcome.kind === "success") {
+        queryClient.invalidateQueries({ queryKey: ["appointments", "mine"] });
+      }
     },
-    // No onError toast here - BookingDialog already shows this inline, including
-    // the distinct 409 "slot just taken" case, which a generic toast would flatten.
   });
 }
 
@@ -80,9 +80,23 @@ export function useRateAppointment() {
   });
 }
 
+// A booking is made in the patient's own session, so the therapist's cache can't be
+// invalidated from there. Therapist views pick up new bookings on mount, on window
+// focus, and through this light poll.
+const THERAPIST_POLL_MS = 60 * 1000;
+
+// Confirm/complete change the schedule, the dashboard counts/today list and the
+// patients' session totals, so refresh the whole therapist family.
+function invalidateTherapistViews(queryClient: ReturnType<typeof useQueryClient>) {
+  queryClient.invalidateQueries({ queryKey: ["appointments", "schedule"] });
+  queryClient.invalidateQueries({ queryKey: ["appointments", "dashboard"] });
+  queryClient.invalidateQueries({ queryKey: ["appointments", "patients"] });
+}
+
 export function useTherapistSchedule(date?: string) {
   return useQuery({
     queryKey: ["appointments", "schedule", date],
+    refetchInterval: THERAPIST_POLL_MS,
     // Pre-existing bug, found live: this requested limit: 100, but
     // appointment-service's therapistScheduleQuerySchema caps limit at 50
     // and 400s above that - every therapist landing on /therapist (the
@@ -96,7 +110,7 @@ export function useConfirmAppointment() {
   return useMutation({
     mutationFn: (id: string) => confirmAppointment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["appointments", "schedule"] });
+      invalidateTherapistViews(queryClient);
       toast.success("Appointment confirmed.");
     },
     onError: (error) => toast.error(errorMessage(error, "Could not confirm this appointment.")),
@@ -108,7 +122,7 @@ export function useCompleteAppointment() {
   return useMutation({
     mutationFn: (id: string) => completeAppointment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["appointments", "schedule"] });
+      invalidateTherapistViews(queryClient);
       toast.success("Appointment marked complete.");
     },
     onError: (error) => toast.error(errorMessage(error, "Could not complete this appointment.")),
@@ -119,6 +133,7 @@ export function useTherapistDashboard() {
   return useQuery({
     queryKey: ["appointments", "dashboard"],
     queryFn: () => fetchTherapistDashboard(),
+    refetchInterval: THERAPIST_POLL_MS,
   });
 }
 
@@ -183,4 +198,12 @@ export function useTherapistPatients(page: number, limit = 20) {
     queryKey: ["appointments", "patients", page, limit],
     queryFn: () => fetchTherapistPatients({ page, limit }),
   });
+}
+
+// Appointments only carry a patientId, so resolve display names from the patients
+// list (best effort: first 50 patients; anyone else falls back to a short id).
+export function usePatientName(): (patientId: string) => string {
+  const { data } = useTherapistPatients(1, 50);
+  const names = new Map((data?.patients ?? []).map((p) => [p.patientId, p.userName]));
+  return (patientId) => names.get(patientId) ?? `Patient ${patientId.slice(0, 8)}`;
 }
