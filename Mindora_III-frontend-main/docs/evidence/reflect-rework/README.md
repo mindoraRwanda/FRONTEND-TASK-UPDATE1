@@ -2,9 +2,8 @@
 
 Captured with Playwright against a production build, with all API responses mocked (no backend, no real alerts).
 
-- Removed the "Messages" nav item from the patient sidebar (the `/messages` route is kept, just not linked from navigation).
-- Removed the red "Emergency: 112" buttons (sidebar crisis card and mobile top bar). The "Call +250 783 974 066" button and card are kept.
-- Added "If you are in danger, call 112" (`tel:112`, 44px tall) to the Reflect chat failure banner.
+- Messaging is removed entirely: the `/messages` route, `MessagesView`, `useMessaging`, the messaging API and socket client, the messaging types, the `socket.io-client` dependency and the `NEXT_PUBLIC_SOCKET_URL` setting. The therapist card's "Get started" now opens the booking dialog directly (the "Chat with this therapist" choice is gone).
+- 112 is no longer shown or linked anywhere (sidebar, mobile top bar, chat notice, chat failure banner, crisis overlay). The Mindora crisis line (+250 783 974 066) is the only crisis call action.
 
 ## Patient sidebar, 1366x768
 

@@ -5,20 +5,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.mindora.rw";
 // Refresh token lives in HttpOnly cookie set by Auth Service
 let inMemoryAccessToken: string | null = null;
 
-// Notifies subscribers on every token change - login, silent refresh (below), and
-// logout alike. This is the one choke point every code path already updates the
-// token through, so it's also the one place that can tell the messaging socket
-// (which lives outside React/AuthContext) to reconnect with a fresh token instead
-// of running on a stale one until the next unrelated 401 happens to trigger a
-// refresh.
-type TokenListener = (token: string | null) => void;
-const tokenListeners = new Set<TokenListener>();
-
-export function onAccessTokenChange(listener: TokenListener): () => void {
-  tokenListeners.add(listener);
-  return () => tokenListeners.delete(listener);
-}
-
 export class ApiError extends Error {
   status: number;
   // Zod's flatten().fieldErrors shape, e.g. { email: ["Invalid email address"] } -
@@ -45,7 +31,6 @@ export class ApiError extends Error {
 
 export function setAccessToken(token: string | null) {
   inMemoryAccessToken = token;
-  tokenListeners.forEach((listener) => listener(token));
 }
 
 export function getAccessToken() {

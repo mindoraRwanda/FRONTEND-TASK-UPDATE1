@@ -20,14 +20,15 @@ function setup(message?: string) {
 describe("CrisisOverlay", () => {
   it("is closed until triggered", () => {
     setup();
-    expect(screen.queryByText(/call 112/i)).toBeNull();
+    expect(screen.queryByText(/crisis line/i)).toBeNull();
   });
 
-  it("shows 112 and the crisis line, with fallback copy when no message", async () => {
+  it("shows the crisis line (and no 112), with fallback copy when no message", async () => {
     setup();
     await userEvent.click(screen.getByText("go"));
-    const link = await screen.findByRole("link", { name: /call 112/i });
-    expect(link).toHaveAttribute("href", "tel:112");
+    await screen.findByRole("link", { name: /crisis line/i });
+    expect(document.querySelector('a[href="tel:112"]')).toBeNull();
+    expect(screen.queryByText(/112/)).toBeNull();
     expect(screen.getByRole("link", { name: /\+250 783 974 066/ })).toHaveAttribute(
       "href",
       "tel:+250783974066"
