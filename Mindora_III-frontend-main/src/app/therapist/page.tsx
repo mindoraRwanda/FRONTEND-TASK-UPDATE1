@@ -104,7 +104,8 @@ export default function TherapistSchedulePage() {
                   {patientLabel(apt.patientId)}
                 </p>
                 <p className="mt-0.5 text-[12.5px] text-muted-foreground">
-                  {formatSessionType(apt.sessionType)} · {fmtWhen(apt.slotStart)} – {fmtEnd(apt.slotEnd)}
+                  {formatSessionType(apt.sessionType)} · {fmtWhen(apt.slotStart)} –{" "}
+                  {fmtEnd(apt.slotEnd)}
                 </p>
                 {apt.status === "CANCELLED" && apt.cancellationReason && (
                   <p className="mt-0.5 text-[12px] text-red-700">

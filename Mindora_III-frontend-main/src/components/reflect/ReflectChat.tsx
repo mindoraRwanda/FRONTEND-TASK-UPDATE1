@@ -187,7 +187,10 @@ export function ReflectChat() {
                   <p className="leading-relaxed">
                     {entry.content ?? "This message could not be displayed."}
                   </p>
-                  <a href={EMERGENCY_HREF} className="mt-2 inline-flex min-h-11 items-center font-bold underline">
+                  <a
+                    href={EMERGENCY_HREF}
+                    className="mt-2 inline-flex min-h-11 items-center font-bold underline"
+                  >
                     Emergency: call {EMERGENCY_NUMBER}
                   </a>
                 </div>
