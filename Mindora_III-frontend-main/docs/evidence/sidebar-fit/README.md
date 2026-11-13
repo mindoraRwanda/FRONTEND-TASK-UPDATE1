@@ -37,10 +37,10 @@ After (drawer fits, nav scrolls, Emergency: 112 at y=328): ![drawer after](drawe
 ## After-fix measurements (px, from the viewport top)
 
 | Viewport | Sidebar | Nav scrolls | Crisis card | Emergency: 112 | User chip | Page scrolls |
-|---|---|---|---|---|---|---|
-| 1366x768 | 0-768 | no | 509-702 | 648-684 | 729-755 | no |
-| 1280x600 | 0-600 | yes | 341-534 | 480-516 | 561-587 | no |
-| 1366x500 | 0-500 | yes | 241-434 | 380-416 | 461-487 | no |
+| -------- | ------- | ----------- | ----------- | -------------- | --------- | ------------ |
+| 1366x768 | 0-768   | no          | 509-702     | 648-684        | 729-755   | no           |
+| 1280x600 | 0-600   | yes         | 341-534     | 480-516        | 561-587   | no           |
+| 1366x500 | 0-500   | yes         | 241-434     | 380-416        | 461-487   | no           |
 
 The crisis card, Emergency: 112 and the user chip are inside the viewport at all three sizes without scrolling the page. Therapist and admin sidebars (no crisis card) also fit at 1280x600 with the user chip visible (chip 549-575 and 541-567).
 
