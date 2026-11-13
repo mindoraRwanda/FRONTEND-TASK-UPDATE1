@@ -3,7 +3,7 @@
 import { AlertTriangle, Phone } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { useCrisis } from "@/contexts/CrisisContext";
-import { CRISIS_LINE, EMERGENCY_HREF, EMERGENCY_NUMBER } from "@/lib/crisis";
+import { CRISIS_LINE } from "@/lib/crisis";
 
 export function CrisisOverlay() {
   const { isOpen, message, dismiss } = useCrisis();
@@ -25,18 +25,12 @@ export function CrisisOverlay() {
         </DialogDescription>
 
         <a
-          href={EMERGENCY_HREF}
+          href={CRISIS_LINE.href}
           autoFocus
           className="flex min-h-14 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-lg font-bold text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-800"
         >
           <Phone className="h-5 w-5" aria-hidden="true" />
-          Emergency: call {EMERGENCY_NUMBER}
-        </a>
-        <a
-          href={CRISIS_LINE.href}
-          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-red-300 px-4 text-base font-semibold text-red-800 hover:bg-red-50"
-        >
-          Mindora crisis line: {CRISIS_LINE.display}
+          Call the Mindora crisis line: {CRISIS_LINE.display}
         </a>
         <button
           type="button"

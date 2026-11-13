@@ -7,7 +7,7 @@ import { DeleteAiHistoryDialog } from "@/components/reflect/DeleteAiHistoryDialo
 import { AiRateLimitError } from "@/lib/ai-api";
 import { ApiError } from "@/lib/api";
 import { useCrisis } from "@/contexts/CrisisContext";
-import { EMERGENCY_HREF, EMERGENCY_NUMBER, isCrisisResponse } from "@/lib/crisis";
+import { CRISIS_LINE, isCrisisResponse } from "@/lib/crisis";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { AiInteraction } from "@/types/domain";
@@ -188,10 +188,10 @@ export function ReflectChat() {
                     {entry.content ?? "This message could not be displayed."}
                   </p>
                   <a
-                    href={EMERGENCY_HREF}
+                    href={CRISIS_LINE.href}
                     className="mt-2 inline-flex min-h-11 items-center font-bold underline"
                   >
-                    Emergency: call {EMERGENCY_NUMBER}
+                    Call the crisis line: {CRISIS_LINE.display}
                   </a>
                 </div>
               </div>
@@ -254,16 +254,7 @@ export function ReflectChat() {
 
         {genericErrorMessage && (
           <div className="mt-3 rounded-2xl bg-red-50 px-4 py-2.5 text-[13px] font-medium text-red-700 shadow-[inset_3px_3px_7px_#f3d9d9,inset_-3px_-3px_7px_#ffffff]">
-            <p>{genericErrorMessage}</p>
-            <p className="mt-1 font-normal">
-              If you are in danger,{" "}
-              <a
-                href={EMERGENCY_HREF}
-                className="inline-flex min-h-11 items-center font-bold underline"
-              >
-                call {EMERGENCY_NUMBER}
-              </a>
-            </p>
+            {genericErrorMessage}
           </div>
         )}
 
