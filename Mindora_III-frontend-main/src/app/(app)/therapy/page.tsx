@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { CalendarX, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,7 +15,6 @@ import { AppointmentRow } from "@/components/therapy/AppointmentRow";
 import { BookingDialog } from "@/components/therapy/BookingDialog";
 import { CancelDialog } from "@/components/therapy/CancelDialog";
 import { RateDialog } from "@/components/therapy/RateDialog";
-import { GetStartedDialog } from "@/components/therapy/GetStartedDialog";
 import { useTherapists } from "@/hooks/useTherapists";
 import { useMyAppointments } from "@/hooks/useAppointments";
 import { filterAppointmentsByTab, type AppointmentTab } from "@/lib/appointments";
@@ -27,12 +25,10 @@ type BrowseTab = "browse" | "mine";
 type MineStatus = AppointmentTab;
 
 export default function TherapyPage() {
-  const router = useRouter();
   const [tab, setTab] = useState<BrowseTab>("browse");
   const [search, setSearch] = useState("");
   const [mineStatus, setMineStatus] = useState<MineStatus>("upcoming");
 
-  const [startTherapist, setStartTherapist] = useState<TherapistProfile | null>(null);
   const [bookingTherapist, setBookingTherapist] = useState<TherapistProfile | null>(null);
   const [cancelTarget, setCancelTarget] = useState<BookedAppointment | null>(null);
   const [rateTarget, setRateTarget] = useState<BookedAppointment | null>(null);
@@ -219,7 +215,7 @@ export default function TherapyPage() {
                       key={t.id}
                       therapist={t}
                       index={i}
-                      onBook={() => setStartTherapist(t)}
+                      onBook={() => setBookingTherapist(t)}
                     />
                   ))}
                 </div>
@@ -302,18 +298,6 @@ export default function TherapyPage() {
         </div>
       )}
 
-      <GetStartedDialog
-        therapist={startTherapist}
-        onOpenChange={(open) => !open && setStartTherapist(null)}
-        onBookAppointment={() => {
-          setBookingTherapist(startTherapist);
-          setStartTherapist(null);
-        }}
-        onChat={() => {
-          if (startTherapist) router.push(`/messages?therapistId=${startTherapist.userId}`);
-          setStartTherapist(null);
-        }}
-      />
       <BookingDialog
         therapist={bookingTherapist}
         onOpenChange={(open) => !open && setBookingTherapist(null)}

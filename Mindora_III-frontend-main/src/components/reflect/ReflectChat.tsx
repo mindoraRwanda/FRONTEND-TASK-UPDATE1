@@ -7,7 +7,7 @@ import { DeleteAiHistoryDialog } from "@/components/reflect/DeleteAiHistoryDialo
 import { AiRateLimitError } from "@/lib/ai-api";
 import { ApiError } from "@/lib/api";
 import { useCrisis } from "@/contexts/CrisisContext";
-import { EMERGENCY_HREF, EMERGENCY_NUMBER, isCrisisResponse } from "@/lib/crisis";
+import { CRISIS_LINE, isCrisisResponse } from "@/lib/crisis";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { AiInteraction } from "@/types/domain";
@@ -188,10 +188,10 @@ export function ReflectChat() {
                     {entry.content ?? "This message could not be displayed."}
                   </p>
                   <a
-                    href={EMERGENCY_HREF}
+                    href={CRISIS_LINE.href}
                     className="mt-2 inline-flex min-h-11 items-center font-bold underline"
                   >
-                    Emergency: call {EMERGENCY_NUMBER}
+                    Call the crisis line: {CRISIS_LINE.display}
                   </a>
                 </div>
               </div>

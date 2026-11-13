@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CRISIS_LINE, EMERGENCY_HREF, EMERGENCY_NUMBER } from "@/lib/crisis";
+import { CRISIS_LINE } from "@/lib/crisis";
 import { usePathname, useRouter } from "next/navigation";
 import {
   AlertTriangle,
@@ -10,7 +10,6 @@ import {
   Heart,
   Home,
   LogOut,
-  MessageCircle,
   PenLine,
   Settings,
 } from "lucide-react";
@@ -32,7 +31,6 @@ const navItems = [
   { href: "/today", label: "Today", icon: Home },
   { href: "/check-in", label: "Check-in", icon: Heart },
   { href: "/therapy", label: "Therapy", icon: Calendar },
-  { href: "/messages", label: "Messages", icon: MessageCircle },
   { href: "/reflect", label: "Reflect", icon: PenLine },
   { href: "/therapist-application", label: "Become a Therapist", icon: Briefcase },
   { href: "/settings", label: "Settings", icon: Settings },
@@ -116,13 +114,6 @@ export function AppSidebar() {
           </p>
           <Button asChild className="mt-2.5 h-9 w-full text-xs max-lg:h-11" size="sm">
             <a href={CRISIS_LINE.href}>Call {CRISIS_LINE.display}</a>
-          </Button>
-          <Button
-            asChild
-            className="mt-2 h-9 w-full bg-red-600 text-xs text-white hover:bg-red-700 max-lg:h-11"
-            size="sm"
-          >
-            <a href={EMERGENCY_HREF}>Emergency: {EMERGENCY_NUMBER}</a>
           </Button>
         </div>
 
