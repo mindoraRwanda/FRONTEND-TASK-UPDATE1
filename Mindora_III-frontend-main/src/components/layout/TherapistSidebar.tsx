@@ -43,7 +43,7 @@ export function TherapistSidebar() {
         <NotificationBell />
       </div>
 
-      <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto px-3">
+      <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto px-3 [scrollbar-width:thin] [scrollbar-color:#3d3652_transparent]">
         <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/35">
           Your practice
         </p>

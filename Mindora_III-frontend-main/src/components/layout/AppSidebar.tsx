@@ -67,7 +67,7 @@ export function AppSidebar() {
         <NotificationBell />
       </div>
 
-      <nav className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto">
+      <nav className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#3d3652_transparent]">
         <p className="mb-1 px-2.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6d6588]">
           Your day
         </p>

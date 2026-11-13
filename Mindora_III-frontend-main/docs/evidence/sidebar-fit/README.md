@@ -20,6 +20,8 @@ Before (sidebar spans -117..483px: top cut off, user chip below the page): ![128
 
 After (sidebar 0..600px, nav scrolls, card and chip pinned): ![1280x600 after](reflect-1280x600-after.png)
 
+Scrollbar (nav list, 1280x600): thin, transparent track, thumb `#3d3652` on the `#211d2c` sidebar, set with `scrollbar-width: thin` and `scrollbar-color` on the nav only. ![Sidebar scrollbar](reflect-1280x600-after-scrollbar.png)
+
 ## 1366x500 (extra, very short)
 
 Before: ![1366x500 before](reflect-1366x500-before.png)
