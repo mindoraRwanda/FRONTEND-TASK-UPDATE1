@@ -117,15 +117,11 @@ export function AppSidebar() {
           <Button asChild className="mt-2.5 h-9 w-full text-xs max-lg:h-11" size="sm">
             <a href={CRISIS_LINE.href}>Call {CRISIS_LINE.display}</a>
           </Button>
-<<<<<<< HEAD
-          <Button asChild className="mt-2 h-9 w-full bg-red-600 text-xs text-white hover:bg-red-700 max-lg:h-11" size="sm">
-=======
           <Button
             asChild
-            className="mt-2 h-9 w-full bg-red-600 text-xs text-white hover:bg-red-700"
+            className="mt-2 h-9 w-full bg-red-600 text-xs text-white hover:bg-red-700 max-lg:h-11"
             size="sm"
           >
->>>>>>> origin/main
             <a href={EMERGENCY_HREF}>Emergency: {EMERGENCY_NUMBER}</a>
           </Button>
         </div>
