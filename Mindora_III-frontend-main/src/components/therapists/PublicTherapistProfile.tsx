@@ -46,6 +46,20 @@ export function PublicTherapistProfile({ id }: { id: string }) {
         </section>
       ) : null}
 
+      {therapist.cvSummary ? (
+        <section
+          aria-labelledby="therapist-cv-heading"
+          className="mt-6 rounded-xl border border-border bg-white p-6 shadow-sm"
+        >
+          <h2 id="therapist-cv-heading" className="text-lg font-bold text-[#1A1A1A]">
+            Professional summary
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed whitespace-pre-line text-[#4B5563]">
+            {therapist.cvSummary}
+          </p>
+        </section>
+      ) : null}
+
       <section className="mt-6 grid gap-6 rounded-xl border border-border bg-white p-6 shadow-sm sm:grid-cols-2">
         <div>
           <h2 className="text-lg font-bold text-[#1A1A1A]">Approaches</h2>

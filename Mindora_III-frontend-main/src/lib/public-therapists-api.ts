@@ -32,6 +32,7 @@ export function toPublicTherapist(profile: TherapistProfile): Therapist {
     name: profile.userName ?? "Therapist",
     title: profile.specialisation ?? "Therapist",
     photo: profile.photoUrl ?? undefined,
+    cvSummary: profile.cvSummary?.trim() || undefined,
     bio: bio.length ? bio : undefined,
     languages: profile.languages.length ? profile.languages : undefined,
     specialisations: profile.specialisation ? [profile.specialisation] : [],

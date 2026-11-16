@@ -6,6 +6,8 @@ export interface Therapist {
   title: string;
   photo?: string;
   bio?: string[];
+  // Short professional summary from the therapist profile (live data only).
+  cvSummary?: string;
   languages?: string[];
   inPerson?: boolean;
   phone?: string;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { Clock, Globe, MapPin, Star } from "lucide-react";
 import type { Therapist } from "@/lib/mock-data/therapists";
@@ -29,7 +30,8 @@ export function TherapistAvatar({
   therapist: Pick<Therapist, "name" | "photo">;
   size?: number;
 }) {
-  if (therapist.photo) {
+  const [failed, setFailed] = useState(false);
+  if (therapist.photo && !failed) {
     return (
       <Image
         src={therapist.photo}
@@ -37,7 +39,8 @@ export function TherapistAvatar({
         width={size}
         height={size}
         unoptimized={/^https?:\/\//.test(therapist.photo)}
-        className="shrink-0 rounded-full object-cover"
+        onError={() => setFailed(true)}
+        className="shrink-0 rounded-full object-cover object-top"
         style={{ width: size, height: size }}
       />
     );

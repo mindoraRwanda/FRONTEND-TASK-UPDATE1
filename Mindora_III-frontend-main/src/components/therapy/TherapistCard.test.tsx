@@ -82,3 +82,59 @@ describe("TherapistCard photo", () => {
     expect(screen.getByText("UD")).toBeInTheDocument();
   });
 });
+
+describe("TherapistCard headshot", () => {
+  it("renders the photo with alt text, top-aligned so faces are not cropped", () => {
+    render(
+      <TherapistCard
+        therapist={{ ...therapist, photoUrl: "http://localhost:8000/api/v1/users/photos/abc.jpg" }}
+        index={0}
+        onBook={jest.fn()}
+      />
+    );
+    const img = screen.getByRole("img", { name: "Dr Uwase Diane" });
+    expect(img).toHaveAttribute("src", "http://localhost:8000/api/v1/users/photos/abc.jpg");
+    expect(img.className).toContain("object-cover");
+    expect(img.className).toContain("object-top");
+  });
+});
+
+describe("TherapistCard CV summary", () => {
+  const summary = "Clinical psychologist with a focus on youth mental health. ".repeat(10).trim();
+
+  it("shows the summary, clamped to 4 lines, with a Read more link to the full profile", () => {
+    render(
+      <TherapistCard
+        therapist={{ ...therapist, cvSummary: summary }}
+        index={0}
+        onBook={jest.fn()}
+      />
+    );
+    const block = screen.getByTestId("therapist-cv");
+    const text = block.querySelector("p")!;
+    expect(text).toHaveTextContent(summary);
+    expect(text.className).toContain("line-clamp-4");
+
+    const link = screen.getByRole("link", { name: "Read more about Dr Uwase Diane" });
+    expect(link).toHaveAttribute("href", "/therapists/user-1");
+    expect(link.className).toContain("min-h-11");
+  });
+
+  it("shows no CV section when the summary is missing, null or blank", () => {
+    const { rerender } = render(
+      <TherapistCard therapist={therapist} index={0} onBook={jest.fn()} />
+    );
+    expect(screen.queryByTestId("therapist-cv")).not.toBeInTheDocument();
+
+    rerender(
+      <TherapistCard therapist={{ ...therapist, cvSummary: null }} index={0} onBook={jest.fn()} />
+    );
+    expect(screen.queryByTestId("therapist-cv")).not.toBeInTheDocument();
+
+    rerender(
+      <TherapistCard therapist={{ ...therapist, cvSummary: "   " }} index={0} onBook={jest.fn()} />
+    );
+    expect(screen.queryByTestId("therapist-cv")).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /read more/i })).not.toBeInTheDocument();
+  });
+});

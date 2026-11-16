@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import type { TherapistProfile } from "@/types/domain";
 import { cn } from "@/lib/utils";
@@ -34,6 +35,7 @@ export function TherapistCard({ therapist, index, onBook }: TherapistCardProps) 
   // "Get started" action on the back face is reachable on touch devices too.
   const [flipped, setFlipped] = useState(false);
   const showPhoto = !!therapist.photoUrl && !photoFailed;
+  const cvSummary = therapist.cvSummary?.trim() || null;
 
   // Tint the card to match the photo's own backdrop color. Falls back to the
   // cycling purple palette if there's no photo, or if the image can't be
@@ -76,7 +78,7 @@ export function TherapistCard({ therapist, index, onBook }: TherapistCardProps) 
                 alt={therapist.userName ?? "Therapist"}
                 loading="lazy"
                 onError={() => setPhotoFailed(true)}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover object-top"
               />
             ) : (
               <span
@@ -99,7 +101,9 @@ export function TherapistCard({ therapist, index, onBook }: TherapistCardProps) 
         {/* BACK - specialisation, languages, status, booking */}
         <div
           className={cn(
-            "absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-[20px] p-6 text-center shadow-[10px_10px_22px_#cbc4de,-10px_-10px_22px_#fdfbff] [backface-visibility:hidden] [transform:rotateY(180deg)]",
+            "absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-[20px] text-center shadow-[10px_10px_22px_#cbc4de,-10px_-10px_22px_#fdfbff] [backface-visibility:hidden] [transform:rotateY(180deg)]",
+            // Tighter padding when a CV summary needs the room.
+            cvSummary ? "p-4" : "p-6",
             bgClass,
             textClass
           )}
@@ -126,8 +130,20 @@ export function TherapistCard({ therapist, index, onBook }: TherapistCardProps) 
             </button>
           </div>
 
-          <div className="flex flex-1 flex-col items-center justify-center gap-4">
-            <div className="font-serif text-2xl font-bold">{therapist.userName ?? "Therapist"}</div>
+          <div
+            className={cn(
+              "my-2 flex min-h-0 w-full flex-1 flex-col items-center overflow-y-auto py-1",
+              cvSummary ? "gap-2" : "gap-3"
+            )}
+          >
+            <div
+              className={cn(
+                "mt-auto font-serif font-bold",
+                cvSummary ? "text-xl leading-tight" : "text-2xl"
+              )}
+            >
+              {therapist.userName ?? "Therapist"}
+            </div>
             <div className="text-[15px] font-bold tracking-wide uppercase opacity-85">
               {therapist.specialisation ?? "General practice"}
             </div>
@@ -141,22 +157,44 @@ export function TherapistCard({ therapist, index, onBook }: TherapistCardProps) 
                 </span>
               ))}
             </div>
+            {cvSummary ? (
+              <div className="w-full text-left" data-testid="therapist-cv">
+                <p className="line-clamp-4 text-[12.5px] leading-snug opacity-95">{cvSummary}</p>
+              </div>
+            ) : null}
+            <div className="mb-auto" />
           </div>
 
-          <button
-            type="button"
-            onClick={onBook}
-            disabled={!therapist.isAcceptingPatients}
+          <div
             className={cn(
-              "flex min-h-11 items-center gap-1.5 px-4 text-[15px] font-bold",
-              therapist.isAcceptingPatients
-                ? "cursor-pointer hover:underline"
-                : "cursor-not-allowed opacity-50"
+              "flex w-full items-center",
+              cvSummary ? "justify-between" : "justify-center"
             )}
           >
-            {therapist.isAcceptingPatients ? "Get started" : "Not accepting patients"}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </button>
+            {cvSummary ? (
+              <Link
+                href={`/therapists/${encodeURIComponent(therapist.userId)}`}
+                aria-label={`Read more about ${therapist.userName ?? "this therapist"}`}
+                className="flex min-h-11 items-center px-2 text-[13px] font-bold whitespace-nowrap underline underline-offset-2"
+              >
+                Read more
+              </Link>
+            ) : null}
+            <button
+              type="button"
+              onClick={onBook}
+              disabled={!therapist.isAcceptingPatients}
+              className={cn(
+                "flex min-h-11 items-center gap-1.5 px-3 text-[15px] font-bold whitespace-nowrap",
+                therapist.isAcceptingPatients
+                  ? "cursor-pointer hover:underline"
+                  : "cursor-not-allowed opacity-50"
+              )}
+            >
+              {therapist.isAcceptingPatients ? "Get started" : "Not accepting patients"}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
