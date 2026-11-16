@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { setAccessToken } from "@/lib/api";
+import { onAccessTokenChange, setAccessToken } from "@/lib/api";
 import {
   login as loginRequest,
   logout as logoutRequest,
@@ -66,6 +66,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setToken = useCallback((token: string | null) => {
     setTokenState(token);
     setAccessToken(token); // sync to in-memory store for apiFetch
+  }, []);
+
+  // apiFetch can clear or refresh the in-memory token after a 401 without
+  // going through this context's setter. Keep React auth state in sync with
+  // that shared token source so RouteGuard responds to expired sessions.
+  useEffect(() => {
+    return onAccessTokenChange((token) => {
+      setTokenState(token);
+      if (!token) {
+        setUser(null);
+        return;
+      }
+      try {
+        setUser(userFromAccessToken(token));
+      } catch {
+        setTokenState(null);
+        setUser(null);
+        setAccessToken(null);
+      }
+    });
   }, []);
 
   // On mount - attempt silent refresh using HttpOnly cookie
