@@ -32,6 +32,9 @@ export interface TherapistProfile {
   languages: string[];
   isAcceptingPatients: boolean;
   photoUrl: string | null;
+  // Short public professional summary (max 1500 chars). Optional: older backends
+  // do not send it, so treat missing the same as null.
+  cvSummary?: string | null;
 }
 
 // The Appointment Service's own appointment shape - only carries therapistId

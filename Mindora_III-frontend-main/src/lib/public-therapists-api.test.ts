@@ -58,3 +58,21 @@ describe("toPublicTherapist", () => {
     expect(t.bio).toBeUndefined();
   });
 });
+
+describe("toPublicTherapist cvSummary", () => {
+  it("maps the summary, trimmed", () => {
+    expect(toPublicTherapist({ ...profile, cvSummary: "  Psychologist.  " }).cvSummary).toBe(
+      "Psychologist."
+    );
+  });
+
+  it.each([[undefined], [null], [""], ["   "]])("leaves cvSummary unset for %p", (value) => {
+    expect(toPublicTherapist({ ...profile, cvSummary: value }).cvSummary).toBeUndefined();
+  });
+
+  it("maps the photo URL straight through", () => {
+    expect(toPublicTherapist({ ...profile, photoUrl: "http://x/y.jpg" }).photo).toBe(
+      "http://x/y.jpg"
+    );
+  });
+});
