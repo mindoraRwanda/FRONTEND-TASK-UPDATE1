@@ -143,7 +143,7 @@ describe("TherapistDashboardPage", () => {
     render(<TherapistDashboardPage />);
     expect(screen.getByText(/Amina/)).toBeInTheDocument();
     expect(screen.getAllByText("Patient 11111111").length).toBeGreaterThan(0);
-    expect(screen.getByText("Video session")).toBeInTheDocument();
+    expect(screen.getAllByText("Video session").length).toBeGreaterThan(0);
   });
 
   it("shows loading skeletons without presenting an empty day", () => {
