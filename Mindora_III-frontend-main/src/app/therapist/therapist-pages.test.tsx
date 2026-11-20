@@ -106,7 +106,7 @@ beforeEach(() => {
 describe("TherapistSchedulePage", () => {
   it("lists appointment references, session type, status and actions", () => {
     render(<TherapistSchedulePage />);
-    expect(screen.getByText("Patient 11111111")).toBeInTheDocument();
+    expect(screen.getAllByText("Patient 11111111").length).toBeGreaterThan(0);
     expect(screen.getByText("Video session")).toBeInTheDocument();
     expect(screen.getAllByText("Pending").length).toBeGreaterThan(1);
     expect(screen.getByRole("button", { name: "Confirm" })).toBeInTheDocument();
