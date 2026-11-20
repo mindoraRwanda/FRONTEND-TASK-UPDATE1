@@ -4,11 +4,13 @@ import {
   addTherapistApplicationNote,
   approveTherapistApplication,
   decryptPostAuthor,
+  fetchAdminAppointments,
   fetchAlerts,
   fetchAnalytics,
   fetchAuditLog,
   fetchDetailedAnalytics,
   fetchModerationQueue,
+  fetchNotificationDeliveryLogs,
   fetchTherapistApplication,
   fetchTherapistApplications,
   fetchUsers,
@@ -26,6 +28,31 @@ import type { TherapistApplicationStatus } from "@/types/domain";
 
 function errorMessage(error: unknown, fallback: string): string {
   return error instanceof ApiError ? error.message : fallback;
+}
+
+export function useAdminAppointments(params: {
+  page?: number;
+  limit?: number;
+  status?: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+}) {
+  return useQuery({
+    queryKey: ["admin", "appointments", params],
+    queryFn: () => fetchAdminAppointments(params),
+  });
+}
+
+export function useAdminNotificationLogs(params: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  channel?: string;
+  eventType?: string;
+  userId?: string;
+}) {
+  return useQuery({
+    queryKey: ["admin", "notification-logs", params],
+    queryFn: () => fetchNotificationDeliveryLogs(params),
+  });
 }
 
 export function useAdminUsers(params: {

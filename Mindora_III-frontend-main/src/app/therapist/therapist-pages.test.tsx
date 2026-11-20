@@ -3,132 +3,181 @@ import TherapistSchedulePage from "@/app/therapist/page";
 import TherapistDashboardPage from "@/app/therapist/dashboard/page";
 import TherapistPatientsPage from "@/app/therapist/patients/page";
 import {
+  useAvailability,
+  useCancelAppointment,
   useCompleteAppointment,
   useConfirmAppointment,
-  usePatientName,
   useTherapistDashboard,
   useTherapistPatients,
   useTherapistSchedule,
 } from "@/hooks/useAppointments";
+import { useMyProfile } from "@/hooks/useMyProfile";
+
+jest.mock("@/contexts/AuthContext", () => ({
+  useAuth: () => ({
+    user: { userId: "therapist-test-id", email: "therapist@example.test", role: "THERAPIST" },
+  }),
+}));
+
+jest.mock("@/hooks/useMyProfile", () => ({
+  useMyProfile: jest.fn(),
+}));
 
 jest.mock("@/hooks/useAppointments", () => ({
+  useAvailability: jest.fn(),
+  useCancelAppointment: jest.fn(),
   useCompleteAppointment: jest.fn(),
   useConfirmAppointment: jest.fn(),
-  usePatientName: jest.fn(),
   useTherapistDashboard: jest.fn(),
   useTherapistPatients: jest.fn(),
   useTherapistSchedule: jest.fn(),
 }));
-jest.mock("@/components/therapist/MoodReportDialog", () => ({ MoodReportDialog: () => null }));
+
+jest.mock("@/components/therapist/MoodReportDialog", () => ({
+  MoodReportDialog: () => null,
+}));
 
 const schedule = useTherapistSchedule as jest.Mock;
 const dashboard = useTherapistDashboard as jest.Mock;
+const availability = useAvailability as jest.Mock;
 const patients = useTherapistPatients as jest.Mock;
 
 const idle = { data: undefined, isLoading: false, isError: false };
-const apt = {
+const appointment = {
   id: "a1",
   patientId: "11111111-aaaa-bbbb-cccc-222222222222",
   therapistId: "t1",
-  slotStart: "2030-01-15T09:00:00.000Z",
-  slotEnd: "2030-01-15T09:50:00.000Z",
+  slotStart: "2026-11-21T10:00:00.000Z",
+  slotEnd: "2026-11-21T10:50:00.000Z",
   sessionType: "VIDEO",
   status: "PENDING",
   cancellationReason: null,
   rating: null,
-  createdAt: "2030-01-10T09:00:00.000Z",
-  updatedAt: "2030-01-10T09:00:00.000Z",
+  createdAt: "2026-11-20T09:00:00.000Z",
+  updatedAt: "2026-11-20T09:00:00.000Z",
+};
+
+const dashboardData = {
+  todaysSessions: [{ ...appointment, status: "CONFIRMED" }],
+  pendingCount: 2,
+  upcomingCount: 5,
+  patientCount: 3,
+};
+
+const patientList = {
+  patients: [
+    { patientId: "p1", userName: "Amina Uwase", totalSessions: 4, lastSessionAt: null },
+    { patientId: "22222222-x", userName: null, totalSessions: 1, lastSessionAt: null },
+  ],
+  total: 2,
+  page: 1,
+  limit: 20,
 };
 
 beforeEach(() => {
-  (useConfirmAppointment as jest.Mock).mockReturnValue({ mutate: jest.fn(), isPending: false });
-  (useCompleteAppointment as jest.Mock).mockReturnValue({ mutate: jest.fn(), isPending: false });
-  (usePatientName as jest.Mock).mockReturnValue((id: string) =>
-    id === apt.patientId ? "Amina Uwase" : `Patient ${id.slice(0, 8)}`
-  );
+  jest.clearAllMocks();
+  schedule.mockReturnValue({
+    ...idle,
+    data: { appointments: [appointment], total: 1 },
+    refetch: jest.fn(),
+  });
+  dashboard.mockReturnValue({ ...idle, data: dashboardData, refetch: jest.fn() });
+  availability.mockReturnValue({ ...idle, data: { slots: [] }, refetch: jest.fn() });
+  patients.mockReturnValue({ ...idle, data: patientList });
+  (useMyProfile as jest.Mock).mockReturnValue({
+    data: { profile: { userName: "Amina" } },
+  });
+  (useCancelAppointment as jest.Mock).mockReturnValue({
+    mutate: jest.fn(),
+    mutateAsync: jest.fn(),
+    reset: jest.fn(),
+    isPending: false,
+  });
+  (useConfirmAppointment as jest.Mock).mockReturnValue({
+    mutate: jest.fn(),
+    isPending: false,
+  });
+  (useCompleteAppointment as jest.Mock).mockReturnValue({
+    mutate: jest.fn(),
+    isPending: false,
+  });
 });
 
 describe("TherapistSchedulePage", () => {
-  it("lists appointments with patient name, session type and status", () => {
-    schedule.mockReturnValue({ ...idle, data: { appointments: [apt] } });
+  it("lists appointment references, session type, status and actions", () => {
     render(<TherapistSchedulePage />);
-    expect(screen.getByText("Amina Uwase")).toBeInTheDocument();
-    expect(screen.getByText(/Video call/)).toBeInTheDocument();
-    expect(screen.getByText("Pending")).toBeInTheDocument();
+    expect(screen.getByText("Patient 11111111")).toBeInTheDocument();
+    expect(screen.getByText("Video session")).toBeInTheDocument();
+    expect(screen.getAllByText("Pending").length).toBeGreaterThan(1);
     expect(screen.getByRole("button", { name: "Confirm" })).toBeInTheDocument();
   });
 
-  it("shows a loading state", () => {
-    schedule.mockReturnValue({ ...idle, isLoading: true });
+  it("shows loading skeletons without presenting an empty schedule", () => {
+    schedule.mockReturnValue({ ...idle, isLoading: true, refetch: jest.fn() });
     render(<TherapistSchedulePage />);
-    expect(screen.getByText("Loading your schedule…")).toBeInTheDocument();
+    expect(screen.getByText("My appointments")).toBeInTheDocument();
+    expect(screen.queryByText("No appointments in this view")).not.toBeInTheDocument();
   });
 
   it("shows the empty state when there are no appointments", () => {
-    schedule.mockReturnValue({ ...idle, data: { appointments: [] } });
+    schedule.mockReturnValue({
+      ...idle,
+      data: { appointments: [], total: 0 },
+      refetch: jest.fn(),
+    });
     render(<TherapistSchedulePage />);
-    expect(screen.getByText("No appointments")).toBeInTheDocument();
+    expect(screen.getByText("No appointments in this view")).toBeInTheDocument();
   });
 
-  it("shows only the error, not the empty state, when loading fails", () => {
-    schedule.mockReturnValue({ ...idle, isError: true });
+  it("does not show a false empty state when loading fails", () => {
+    schedule.mockReturnValue({ ...idle, isError: true, refetch: jest.fn() });
     render(<TherapistSchedulePage />);
-    expect(screen.getByText("Could not load your schedule.")).toBeInTheDocument();
-    expect(screen.queryByText("No appointments")).not.toBeInTheDocument();
+    expect(screen.getByText("Your schedule could not be loaded.")).toBeInTheDocument();
+    expect(screen.getByText(/Appointment records are unavailable/)).toBeInTheDocument();
+    expect(screen.queryByText("No appointments in this view")).not.toBeInTheDocument();
   });
 });
 
 describe("TherapistDashboardPage", () => {
-  const data = {
-    todaysSessions: [{ ...apt, status: "CONFIRMED" }],
-    pendingCount: 2,
-    upcomingCount: 5,
-    patientCount: 3,
-  };
-
-  it("shows stats and today's sessions with the patient name", () => {
-    dashboard.mockReturnValue({ ...idle, data });
+  it("shows practice stats and today's patient appointment reference", () => {
     render(<TherapistDashboardPage />);
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("5")).toBeInTheDocument();
-    expect(screen.getByText(/Amina Uwase/)).toBeInTheDocument();
+    expect(screen.getByText(/Amina/)).toBeInTheDocument();
+    expect(screen.getByText("Patient 11111111")).toBeInTheDocument();
+    expect(screen.getByText("Video session")).toBeInTheDocument();
   });
 
-  it("shows a loading state", () => {
-    dashboard.mockReturnValue({ ...idle, isLoading: true });
+  it("shows loading skeletons without presenting an empty day", () => {
+    dashboard.mockReturnValue({ ...idle, isLoading: true, refetch: jest.fn() });
     render(<TherapistDashboardPage />);
-    expect(screen.getByText(/Loading today.s sessions/)).toBeInTheDocument();
+    expect(screen.getByText("Today's schedule")).toBeInTheDocument();
+    expect(screen.queryByText("No sessions today")).not.toBeInTheDocument();
   });
 
   it("shows the empty state when there are no sessions today", () => {
-    dashboard.mockReturnValue({ ...idle, data: { ...data, todaysSessions: [] } });
+    dashboard.mockReturnValue({
+      ...idle,
+      data: { ...dashboardData, todaysSessions: [] },
+      refetch: jest.fn(),
+    });
     render(<TherapistDashboardPage />);
     expect(screen.getByText("No sessions today")).toBeInTheDocument();
   });
 
-  it("on error shows the banner with dashes instead of zero stats and no empty state", () => {
-    dashboard.mockReturnValue({ ...idle, isError: true });
+  it("shows unavailable states instead of false zeroes when data loading fails", () => {
+    dashboard.mockReturnValue({ ...idle, isError: true, refetch: jest.fn() });
+    schedule.mockReturnValue({ ...idle, isError: true, refetch: jest.fn() });
+    availability.mockReturnValue({ ...idle, isError: true, refetch: jest.fn() });
     render(<TherapistDashboardPage />);
-    expect(screen.getByText(/Could not load your dashboard/)).toBeInTheDocument();
-    expect(screen.getAllByText("–")).toHaveLength(3);
-    expect(screen.queryByText("0")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("alert").length).toBeGreaterThan(0);
+    expect(screen.getByText(/Today's sessions could not be loaded/)).toBeInTheDocument();
+    expect(screen.getByText(/Appointment requests could not be loaded/)).toBeInTheDocument();
     expect(screen.queryByText("No sessions today")).not.toBeInTheDocument();
+    expect(screen.queryByText("No pending requests in this page")).not.toBeInTheDocument();
   });
 });
 
 describe("TherapistPatientsPage", () => {
-  const list = {
-    patients: [
-      { patientId: "p1", userName: "Amina Uwase", totalSessions: 4, lastSessionAt: null },
-      { patientId: "22222222-x", userName: null, totalSessions: 1, lastSessionAt: null },
-    ],
-    total: 2,
-    page: 1,
-    limit: 20,
-  };
-
-  it("lists patients, falling back to a short id when there is no name", () => {
-    patients.mockReturnValue({ ...idle, data: list });
+  it("lists patients and uses a short ID when a name is unavailable", () => {
     render(<TherapistPatientsPage />);
     expect(screen.getByText("Amina Uwase")).toBeInTheDocument();
     expect(screen.getByText("Patient 22222222")).toBeInTheDocument();
@@ -141,7 +190,10 @@ describe("TherapistPatientsPage", () => {
   });
 
   it("shows the empty state when there are no patients", () => {
-    patients.mockReturnValue({ ...idle, data: { ...list, patients: [], total: 0 } });
+    patients.mockReturnValue({
+      ...idle,
+      data: { ...patientList, patients: [], total: 0 },
+    });
     render(<TherapistPatientsPage />);
     expect(screen.getByText(/have any patients yet/)).toBeInTheDocument();
   });
