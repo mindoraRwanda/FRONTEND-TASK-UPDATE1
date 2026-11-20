@@ -32,7 +32,10 @@ backend PR #7. Merge and deploy the backend only after its CI passes, production
 migration histories are reconciled, and the required Railway variables are set.
 Then verify the frontend against the staging backend before deploying it.
 
-The restored schedule/dashboard distinguish loading, empty and failed states; a failed API request is never presented as a genuine zero or empty patient/appointment list. Historical IN_PERSON/CHAT appointments are labelled safely even though new bookings use VIDEO/AUDIO only.
+The restored schedule/dashboard distinguish loading, empty and failed states.
+A failed API request is never presented as a genuine zero or empty list.
+Historical IN_PERSON/CHAT appointments are labelled safely even though new
+bookings use VIDEO/AUDIO only.
 
 No production account, database, domain, or Railway setting is changed by this
 frontend branch.
