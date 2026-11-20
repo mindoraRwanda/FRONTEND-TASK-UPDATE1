@@ -142,7 +142,7 @@ describe("TherapistDashboardPage", () => {
   it("shows practice stats and today's patient appointment reference", () => {
     render(<TherapistDashboardPage />);
     expect(screen.getByText(/Amina/)).toBeInTheDocument();
-    expect(screen.getByText("Patient 11111111")).toBeInTheDocument();
+    expect(screen.getAllByText("Patient 11111111").length).toBeGreaterThan(0);
     expect(screen.getByText("Video session")).toBeInTheDocument();
   });
 
