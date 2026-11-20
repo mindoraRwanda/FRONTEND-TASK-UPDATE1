@@ -2,7 +2,19 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { CalendarClock, LayoutDashboard, LogOut, Users, Clock, Settings } from "lucide-react";
+import {
+  Activity,
+  CalendarClock,
+  ClipboardList,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Pill,
+  Users,
+  Clock,
+  Settings,
+  Video,
+} from "lucide-react";
 import { MindoraLogo } from "@/components/brand/MindoraLogo";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +26,12 @@ const navItems = [
   { href: "/therapist/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/therapist/availability", label: "Availability", icon: Clock },
   { href: "/therapist/patients", label: "Patients", icon: Users },
+  { href: "/therapist/treatment-plans", label: "Treatment plans", icon: ClipboardList },
+  { href: "/therapist/medication", label: "Medication", icon: Pill },
+  { href: "/therapist/prescriptions", label: "Prescriptions", icon: FileText },
+  { href: "/therapist/reports", label: "Reports", icon: Activity },
+  { href: "/therapist/communities", label: "Communities", icon: Users },
+  { href: "/therapist/video-sessions", label: "Video sessions", icon: Video },
   { href: "/therapist/settings", label: "Settings", icon: Settings },
 ];
 
@@ -37,13 +55,13 @@ export function TherapistSidebar() {
   }
 
   return (
-    <aside className="flex h-full min-h-0 w-full shrink-0 flex-col self-stretch bg-mindora-sidebar text-white">
-      <div className="flex shrink-0 items-center justify-between px-5 py-5">
+    <aside className="flex h-full w-[220px] shrink-0 flex-col self-stretch bg-mindora-sidebar text-white">
+      <div className="flex items-center justify-between px-5 py-5">
         <MindoraLogo variant="light" size="md" />
         <NotificationBell />
       </div>
 
-      <nav className="min-h-0 flex-1 space-y-0.5 overflow-y-auto px-3 [scrollbar-width:thin] [scrollbar-color:#3d3652_transparent]">
+      <nav className="flex-1 space-y-0.5 px-3">
         <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/35">
           Your practice
         </p>
@@ -55,7 +73,7 @@ export function TherapistSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-2.5 rounded-lg px-3 py-2 max-lg:min-h-11 text-[13px] font-medium transition-colors",
+                "flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors",
                 isActive
                   ? "bg-white/10 text-white"
                   : "text-white/55 hover:bg-white/5 hover:text-white"
@@ -68,7 +86,7 @@ export function TherapistSidebar() {
         })}
       </nav>
 
-      <div className="shrink-0 space-y-3 px-3 pb-4">
+      <div className="space-y-3 px-3 pb-4">
         <div className="flex items-center gap-2.5 rounded-lg px-1 py-1">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mindora-purple text-xs font-semibold">
             {displayName.slice(0, 2).toUpperCase()}
@@ -80,7 +98,7 @@ export function TherapistSidebar() {
           <button
             type="button"
             onClick={handleSignOut}
-            className="inline-flex items-center justify-center rounded-md p-1.5 text-white/45 hover:bg-white/5 hover:text-white max-lg:h-11 max-lg:w-11"
+            className="rounded-md p-1.5 text-white/45 hover:bg-white/5 hover:text-white"
             aria-label="Sign out"
           >
             <LogOut className="h-3.5 w-3.5" />
