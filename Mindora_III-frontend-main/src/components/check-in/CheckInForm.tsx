@@ -13,6 +13,7 @@ import {
 } from "@/components/check-in/MoodEntryFields";
 import { TodaysCheckIns } from "@/components/check-in/TodaysCheckIns";
 import { BackfillDialog } from "@/components/check-in/BackfillDialog";
+import { ScreeningCheckIn } from "@/components/check-in/ScreeningCheckIn";
 import { ApiError } from "@/lib/api";
 import { useLogMood, useMoodToday, useUpdateMoodEntry } from "@/hooks/useMood";
 import type { MoodEntry } from "@/types/domain";
@@ -222,6 +223,7 @@ export function CheckInForm() {
         </form>
 
         <TodaysCheckIns editingId={editingEntry?.id ?? null} onEdit={startEdit} />
+        <ScreeningCheckIn />
       </div>
 
       <BackfillDialog open={backfillOpen} onOpenChange={setBackfillOpen} />

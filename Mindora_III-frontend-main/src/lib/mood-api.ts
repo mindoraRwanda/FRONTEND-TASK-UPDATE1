@@ -8,6 +8,24 @@ import type {
   MoodTodayResponse,
   UpdateMoodRequest,
 } from "@/types/domain";
+import type { TestResult } from "@/lib/mock-data/tests";
+
+export type ScreeningInstrumentId =
+  "gad7" | "dass21-depression" | "dass21-anxiety" | "dass21-stress" | "asrs" | "cybocs";
+
+export interface ScreeningResult extends TestResult {
+  id: string;
+  patientId: string;
+  instrumentId: ScreeningInstrumentId;
+  scoringVersion: string;
+  completedAt: string;
+  createdAt: string;
+}
+
+export interface ScreeningSubmission {
+  instrumentId: ScreeningInstrumentId;
+  answers: Record<number, number>;
+}
 
 interface MoodHistoryResponse {
   entries: MoodEntry[];
@@ -33,6 +51,15 @@ export function fetchMoodToday(timezone: string): Promise<MoodTodayResponse> {
 // counts backfilled entries too, regardless of which day they're recorded for.
 export function logMood(body: LogMoodRequest): Promise<MoodEntry> {
   return apiFetch("/api/v1/mood/log", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+// POST /api/v1/mood/screenings - patient only. The backend validates answers,
+// calculates the result, and persists it; callers must not send scores or IDs.
+export function submitScreening(body: ScreeningSubmission): Promise<ScreeningResult> {
+  return apiFetch("/api/v1/mood/screenings", {
     method: "POST",
     body: JSON.stringify(body),
   });
