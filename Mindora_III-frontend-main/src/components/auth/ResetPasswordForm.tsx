@@ -1,5 +1,7 @@
 "use client";
 
+// Temporary CI formatter diagnostic; remove after exact formatting is applied.
+
 import { useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, LockKeyhole } from "lucide-react";
