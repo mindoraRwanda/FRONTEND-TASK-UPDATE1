@@ -47,8 +47,9 @@ export function ForgotPasswordForm() {
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Check your inbox</h1>
             <p className="text-sm leading-6 text-muted-foreground">
-              If a MINDORA account matches <span className="font-semibold text-foreground">{email}</span>,
-              a password reset link may be sent to that address. Check your inbox and spam folder.
+              If a MINDORA account matches{" "}
+              <span className="font-semibold text-foreground">{email}</span>, a password reset link
+              may be sent to that address. Check your inbox and spam folder.
             </p>
             <p className="text-sm text-muted-foreground">
               For your security, the link expires after 15 minutes and can only be used once.
@@ -64,7 +65,8 @@ export function ForgotPasswordForm() {
             </span>
             <h1 className="text-3xl font-bold tracking-tight">Forgot your password?</h1>
             <p className="mt-2 text-muted-foreground">
-              Enter the email address linked to your MINDORA account. We will send a secure reset link when an account matches it.
+              Enter the email address linked to your MINDORA account. We will send a secure reset
+              link when an account matches it.
             </p>
 
             <form onSubmit={onSubmit} className="mt-8 space-y-5">
