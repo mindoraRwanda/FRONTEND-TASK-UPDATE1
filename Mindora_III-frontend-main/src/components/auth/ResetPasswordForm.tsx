@@ -28,7 +28,11 @@ export function ResetPasswordForm() {
       setError("This reset link is missing its security token. Request a new link to continue.");
       return;
     }
-    if (newPassword.length < 8 || !/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword)) {
+    if (
+      newPassword.length < 8 ||
+      !/[A-Za-z]/.test(newPassword) ||
+      !/\d/.test(newPassword)
+    ) {
       setError("Use at least 8 characters, including at least one letter and one number.");
       return;
     }
@@ -45,7 +49,9 @@ export function ResetPasswordForm() {
       setConfirmPassword("");
     } catch (err) {
       if (err instanceof ApiError && err.status === 400) {
-        setError("This reset link is invalid, expired, or has already been used. Request a new link to continue.");
+        setError(
+          "This reset link is invalid, expired, or has already been used. Request a new link to continue."
+        );
       } else if (err instanceof ApiError && err.status === 0) {
         setError("We could not reach the server. Check your connection and try again.");
       } else {
@@ -69,7 +75,8 @@ export function ResetPasswordForm() {
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Password updated</h1>
             <p className="text-sm leading-6 text-muted-foreground">
-              Your MINDORA password has been changed. Sign in using your new password. Existing refresh sessions have been revoked for your protection.
+              Your MINDORA password has been changed. Sign in using your new password. Existing
+              refresh sessions have been revoked for your protection.
             </p>
             <Button asChild className="w-full" size="lg">
               <Link href="/login">
