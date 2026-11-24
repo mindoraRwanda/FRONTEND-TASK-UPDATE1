@@ -106,7 +106,7 @@ beforeEach(() => {
 });
 
 describe("TherapistSchedulePage", () => {
-  it("lists appointment references, session type, status and actions", () => {
+  it("lists upcoming appointment references, session type, status and actions", () => {
     render(<TherapistSchedulePage />);
     fireEvent.click(screen.getByRole("button", { name: "upcoming" }));
     expect(screen.getAllByText("Patient 11111111").length).toBeGreaterThan(0);
