@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import TherapistSchedulePage from "@/app/therapist/page";
 import TherapistDashboardPage from "@/app/therapist/dashboard/page";
 import TherapistPatientsPage from "@/app/therapist/patients/page";
@@ -43,12 +43,14 @@ const availability = useAvailability as jest.Mock;
 const patients = useTherapistPatients as jest.Mock;
 
 const idle = { data: undefined, isLoading: false, isError: false };
+const upcomingSlotStart = new Date(Date.now() + 36 * 60 * 60 * 1000);
+
 const appointment = {
   id: "a1",
   patientId: "11111111-aaaa-bbbb-cccc-222222222222",
   therapistId: "t1",
-  slotStart: "2026-11-21T10:00:00.000Z",
-  slotEnd: "2026-11-21T10:50:00.000Z",
+  slotStart: upcomingSlotStart.toISOString(),
+  slotEnd: new Date(upcomingSlotStart.getTime() + 50 * 60 * 1000).toISOString(),
   sessionType: "VIDEO",
   status: "PENDING",
   cancellationReason: null,
@@ -106,6 +108,7 @@ beforeEach(() => {
 describe("TherapistSchedulePage", () => {
   it("lists appointment references, session type, status and actions", () => {
     render(<TherapistSchedulePage />);
+    fireEvent.click(screen.getByRole("button", { name: "upcoming" }));
     expect(screen.getAllByText("Patient 11111111").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Video session").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Pending").length).toBeGreaterThan(1);
