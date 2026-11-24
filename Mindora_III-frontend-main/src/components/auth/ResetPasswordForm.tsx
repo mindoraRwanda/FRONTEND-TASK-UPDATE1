@@ -1,7 +1,5 @@
 "use client";
 
-// Temporary CI formatter diagnostic; remove after exact formatting is applied.
-
 import { useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, LockKeyhole } from "lucide-react";
@@ -32,9 +30,7 @@ export function ResetPasswordForm() {
     }
 
     const validPassword =
-      newPassword.length >= 8 &&
-      /[A-Za-z]/.test(newPassword) &&
-      /\d/.test(newPassword);
+      newPassword.length >= 8 && /[A-Za-z]/.test(newPassword) && /\\d/.test(newPassword);
 
     if (!validPassword) {
       setError("Use at least 8 characters, with one letter and one number.");
@@ -70,12 +66,10 @@ export function ResetPasswordForm() {
       return (
         <div className="space-y-5" role="status" aria-live="polite">
           <CheckCircle2 className="h-8 w-8 text-mindora-purple" />
-          <h1 className="text-3xl font-bold tracking-tight">
-            Password updated
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Password updated</h1>
           <p className="text-sm leading-6 text-muted-foreground">
-            Your password has been changed. Sign in with your new password.
-            Existing refresh sessions have been revoked.
+            Your password has been changed. Sign in with your new password. Existing refresh
+            sessions have been revoked.
           </p>
           <Button asChild className="w-full" size="lg">
             <Link href="/login">
@@ -91,9 +85,7 @@ export function ResetPasswordForm() {
       return (
         <div className="space-y-5">
           <LockKeyhole className="h-8 w-8 text-mindora-purple" />
-          <h1 className="text-3xl font-bold tracking-tight">
-            Reset link unavailable
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Reset link unavailable</h1>
           <p className="text-sm leading-6 text-muted-foreground">
             This page needs the secure token from your reset email. Request a new link to continue.
           </p>
@@ -109,9 +101,7 @@ export function ResetPasswordForm() {
         <span className="mb-4 text-xs font-medium text-mindora-purple">
           Secure account recovery
         </span>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Create a new password
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight">Create a new password</h1>
         <p className="mt-2 text-muted-foreground">
           Choose a new password for your MINDORA account.
         </p>
@@ -151,12 +141,7 @@ export function ResetPasswordForm() {
             </p>
           )}
 
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
             {isSubmitting ? "Updating password..." : "Update password"}
             <ArrowRight className="h-4 w-4" />
           </Button>
