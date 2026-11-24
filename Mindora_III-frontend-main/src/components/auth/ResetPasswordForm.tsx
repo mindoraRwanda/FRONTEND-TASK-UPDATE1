@@ -93,8 +93,7 @@ export function ResetPasswordForm() {
             Reset link unavailable
           </h1>
           <p className="text-sm leading-6 text-muted-foreground">
-            This page needs the secure token from your reset email. Request a
-            new link to continue.
+            This page needs the secure token from your reset email. Request a new link to continue.
           </p>
           <Button asChild className="w-full" size="lg">
             <Link href="/forgot-password">Request a new link</Link>
