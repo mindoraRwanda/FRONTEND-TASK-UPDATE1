@@ -166,11 +166,7 @@ export function ResetPasswordForm() {
 
   return (
     <div className="flex flex-1 flex-col p-8 lg:p-14">
-      <BackLink
-        fallback="/login"
-        className="mb-6"
-        label="Back to sign in"
-      />
+      <BackLink fallback="/login" className="mb-6" label="Back to sign in" />
       <MindoraLogo />
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
         {renderContent()}
