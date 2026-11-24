@@ -70,9 +70,7 @@ export function ResetPasswordForm() {
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
         {isComplete ? (
           <div className="space-y-5" role="status" aria-live="polite">
-            <div
-              className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-mindora-purple-pale text-mindora-purple"
-            >
+            <div className="flex h-14 w-14 items-center justify-center text-mindora-purple">
               <CheckCircle2 className="h-7 w-7" />
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Password updated</h1>
@@ -105,9 +103,7 @@ export function ResetPasswordForm() {
           </div>
         ) : (
           <>
-            <span
-              className="mb-4 inline-flex w-fit items-center rounded-full bg-mindora-purple-pale px-3 py-1 text-xs font-medium text-mindora-purple"
-            >
+            <span className="mb-4 text-xs font-medium text-mindora-purple">
               Secure account recovery
             </span>
             <h1 className="text-3xl font-bold tracking-tight">Create a new password</h1>
