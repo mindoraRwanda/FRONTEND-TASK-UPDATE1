@@ -25,9 +25,7 @@ export function ResetPasswordForm() {
     setError(null);
 
     if (!token) {
-      setError(
-        "This reset link is missing its security token. Request a new link to continue."
-      );
+      setError("This reset link is missing its security token. Request a new link to continue.");
       return;
     }
     if (
@@ -91,13 +89,15 @@ export function ResetPasswordForm() {
           </div>
         ) : !token ? (
           <div className="space-y-5">
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-mindora-purple-pale text-mindora-purple">
+            <div
+              className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-mindora-purple-pale text-mindora-purple"
+            >
               <LockKeyhole className="h-7 w-7" />
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Reset link unavailable</h1>
             <p className="text-sm leading-6 text-muted-foreground">
-              This page needs the secure token from your MINDORA password reset email. Request a new reset
-              link to continue.
+              This page needs the secure token from your MINDORA password reset email. Request a new
+              reset link to continue.
             </p>
             <Button asChild className="w-full" size="lg">
               <Link href="/forgot-password">Request a new link</Link>
