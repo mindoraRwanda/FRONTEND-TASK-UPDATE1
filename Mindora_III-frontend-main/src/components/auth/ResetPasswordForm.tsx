@@ -32,7 +32,7 @@ export function ResetPasswordForm() {
     const validPassword =
       newPassword.length >= 8 &&
       /[A-Za-z]/.test(newPassword) &&
-      /\\d/.test(newPassword);
+      /\d/.test(newPassword);
 
     if (!validPassword) {
       setError("Use at least 8 characters, with one letter and one number.");
