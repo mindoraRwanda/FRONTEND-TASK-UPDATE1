@@ -29,7 +29,6 @@ export function logout(): Promise<void> {
   return apiFetch("/api/v1/auth/logout", { method: "POST" });
 }
 
-
 // POST /api/v1/auth/forgot-password
 // The API deliberately returns the same response for known and unknown email
 // addresses so the UI never discloses whether an account exists.
