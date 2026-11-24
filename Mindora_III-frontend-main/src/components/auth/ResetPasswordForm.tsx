@@ -87,9 +87,7 @@ export function ResetPasswordForm() {
           </div>
         ) : !token ? (
           <div className="space-y-5">
-            <div
-              className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-mindora-purple-pale text-mindora-purple"
-            >
+            <div className="flex h-14 w-14 items-center justify-center text-mindora-purple">
               <LockKeyhole className="h-7 w-7" />
             </div>
             <h1 className="text-3xl font-bold tracking-tight">Reset link unavailable</h1>
