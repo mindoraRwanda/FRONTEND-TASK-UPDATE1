@@ -32,9 +32,7 @@ export function logout(): Promise<void> {
 // POST /api/v1/auth/forgot-password
 // The API deliberately returns the same response for known and unknown email
 // addresses so the UI never discloses whether an account exists.
-export function requestPasswordReset(
-  email: string
-): Promise<{ message: string }> {
+export function requestPasswordReset(email: string): Promise<{ message: string }> {
   return apiFetch("/api/v1/auth/forgot-password", {
     method: "POST",
     body: JSON.stringify({ email }),
@@ -42,10 +40,7 @@ export function requestPasswordReset(
 }
 
 // POST /api/v1/auth/reset-password
-export function resetPassword(
-  token: string,
-  newPassword: string
-): Promise<{ message: string }> {
+export function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
   return apiFetch("/api/v1/auth/reset-password", {
     method: "POST",
     body: JSON.stringify({ token, newPassword }),
