@@ -4,6 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.mindora.rw";
 // Access token lives in React state via AuthContext
 // Refresh token lives in HttpOnly cookie set by Auth Service
 let inMemoryAccessToken: string | null = null;
+const accessTokenListeners = new Set<(token: string | null) => void>();
 
 export class ApiError extends Error {
   status: number;
@@ -30,7 +31,17 @@ export class ApiError extends Error {
 }
 
 export function setAccessToken(token: string | null) {
+  if (inMemoryAccessToken === token) return;
+
   inMemoryAccessToken = token;
+  accessTokenListeners.forEach((listener) => listener(token));
+}
+
+export function onAccessTokenChange(listener: (token: string | null) => void) {
+  accessTokenListeners.add(listener);
+  return () => {
+    accessTokenListeners.delete(listener);
+  };
 }
 
 export function getAccessToken() {
