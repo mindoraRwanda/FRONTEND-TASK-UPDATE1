@@ -11,6 +11,7 @@ import { useMyProfile } from "@/hooks/useMyProfile";
 import { useMoodStreak } from "@/hooks/useMood";
 import { useMyAppointments } from "@/hooks/useAppointments";
 import { useTherapists } from "@/hooks/useTherapists";
+import { useAcknowledgeCarePlan, useMyCarePlans } from "@/hooks/useCarePlans";
 import { selectNextSession } from "@/lib/appointments";
 import type { TherapistProfile } from "@/types/domain";
 
@@ -37,6 +38,8 @@ export default function TodayPage() {
     isError: appointmentsErrored,
   } = useMyAppointments();
   const { data: therapistData } = useTherapists({});
+  const carePlans = useMyCarePlans();
+  const acknowledgeCarePlan = useAcknowledgeCarePlan();
 
   const displayName = profile?.profile?.userName ?? user?.email ?? "there";
   const firstName = displayName.split(" ")[0];
@@ -150,6 +153,83 @@ export default function TodayPage() {
         </div>
 
         <WeeklyMoodCard />
+      </section>
+
+      <section className="mt-6">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-extrabold text-[#2c1c55]">Your care plan</h2>
+            <p className="mt-1 text-xs text-[#6a6383]">
+              Goals shared by your therapist for you to review.
+            </p>
+          </div>
+        </div>
+        {carePlans.isError ? (
+          <div role="alert" className="rounded-2xl bg-red-50 p-4 text-sm text-red-700">
+            Care plans could not be loaded.
+            <button type="button" onClick={() => carePlans.refetch()} className="ml-3 underline">
+              Retry
+            </button>
+          </div>
+        ) : carePlans.isLoading ? (
+          <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
+        ) : (carePlans.data?.carePlans.length ?? 0) === 0 ? (
+          <div className="rounded-2xl border border-[#dcd5ea] bg-white/60 p-5 text-xs text-[#6a6383]">
+            There are no care plans shared with you yet.
+          </div>
+        ) : (
+          <div className="grid gap-3 md:grid-cols-2">
+            {carePlans.data?.carePlans.map((plan) => (
+              <article
+                key={plan.id}
+                className="rounded-2xl border border-[#dcd5ea] bg-white/80 p-5"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-sm font-bold text-[#2c1c55]">{plan.title}</h3>
+                  <span
+                    className={[
+                      "rounded-full px-2.5 py-1 text-[10px] font-bold",
+                      plan.status === "ACTIVE"
+                        ? "bg-[#e8f5ef] text-[#39765e]"
+                        : "bg-[#fff5e5] text-[#8d641f]",
+                    ].join(" ")}
+                  >
+                    {plan.status === "DRAFT" ? "Review requested" : plan.status}
+                  </span>
+                </div>
+                <ul className="mt-3 space-y-2">
+                  {plan.goals.map((goal, index) => (
+                    <li key={index} className="flex gap-2 text-xs leading-5 text-[#5d4d85]">
+                      <span className="text-mindora-purple">•</span>
+                      {goal}
+                    </li>
+                  ))}
+                </ul>
+                {plan.reviewDate && (
+                  <p className="mt-3 text-[11px] text-[#8f87a4]">
+                    Review date: {new Date(plan.reviewDate).toLocaleDateString()}
+                  </p>
+                )}
+                {plan.status === "DRAFT" && (
+                  <div className="mt-4 border-t border-[#eee9f6] pt-3">
+                    <p className="text-[11px] leading-5 text-[#6a6383]">
+                      Acknowledge this plan only after you have reviewed and discussed these goals
+                      with your therapist.
+                    </p>
+                    <button
+                      type="button"
+                      disabled={acknowledgeCarePlan.isPending}
+                      onClick={() => acknowledgeCarePlan.mutate(plan.id)}
+                      className="mt-3 rounded-full bg-mindora-purple px-4 py-2.5 text-xs font-bold text-white disabled:opacity-50"
+                    >
+                      {acknowledgeCarePlan.isPending ? "Saving…" : "I have reviewed this plan"}
+                    </button>
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="mt-6 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(272px,1fr))]">

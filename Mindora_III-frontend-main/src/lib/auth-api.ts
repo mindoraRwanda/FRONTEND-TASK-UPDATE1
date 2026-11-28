@@ -28,3 +28,21 @@ export function register(params: RegisterRequest): Promise<{ userId: string }> {
 export function logout(): Promise<void> {
   return apiFetch("/api/v1/auth/logout", { method: "POST" });
 }
+
+// POST /api/v1/auth/forgot-password
+// The API deliberately returns the same response for known and unknown email
+// addresses so the UI never discloses whether an account exists.
+export function requestPasswordReset(email: string): Promise<{ message: string }> {
+  return apiFetch("/api/v1/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+// POST /api/v1/auth/reset-password
+export function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+  return apiFetch("/api/v1/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, newPassword }),
+  });
+}

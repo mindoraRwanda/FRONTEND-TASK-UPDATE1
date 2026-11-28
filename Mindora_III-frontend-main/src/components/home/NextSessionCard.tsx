@@ -31,7 +31,21 @@ function sessionLine(iso: string, sessionType: SessionType): string {
     month: "short",
   });
   const timePart = date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-  return `${datePart} · ${timePart} · ${sessionType === "VIDEO" ? "Video" : "Audio"}`;
+  const sessionLabel = (() => {
+    switch (String(sessionType)) {
+      case "VIDEO":
+        return "Video";
+      case "AUDIO":
+        return "Audio";
+      case "IN_PERSON":
+        return "In-person";
+      case "CHAT":
+        return "Chat";
+      default:
+        return "Session";
+    }
+  })();
+  return `${datePart} · ${timePart} · ${sessionLabel}`;
 }
 
 interface NextSessionCardProps {

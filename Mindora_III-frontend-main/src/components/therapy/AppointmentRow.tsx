@@ -21,7 +21,18 @@ const STATUS_LABEL: Record<BookedAppointment["status"], string> = {
 };
 
 function formatSessionType(type: BookedAppointment["sessionType"]): string {
-  return type === "VIDEO" ? "Video call" : "Audio call";
+  switch (String(type)) {
+    case "VIDEO":
+      return "Video call";
+    case "AUDIO":
+      return "Audio call";
+    case "IN_PERSON":
+      return "In-person session";
+    case "CHAT":
+      return "Chat session";
+    default:
+      return "Session";
+  }
 }
 
 function fmtWhen(iso: string): string {

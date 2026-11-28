@@ -1,16 +1,45 @@
 import { apiFetch } from "@/lib/api";
 import { toQueryString } from "@/lib/query-string";
 import type {
+  AppointmentStatus,
+  BookedAppointment,
   AdminUserRecord,
   AuditLogEntry,
   DetailedAnalytics,
-  ModerationReport,
   PlatformAnalytics,
   SystemAlert,
   TherapistApplication,
   TherapistApplicationNote,
   TherapistApplicationStatus,
 } from "@/types/domain";
+
+interface AdminAppointmentListResponse {
+  appointments: BookedAppointment[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface NotificationDeliveryLog {
+  id: string;
+  userId: string;
+  eventType: string;
+  channel: string;
+  status: string;
+  attempts: number;
+  deliveredAt: string | null;
+  failureReason: string | null;
+  createdAt: string;
+  createdAtKigali: string;
+  deliveredAtKigali: string | null;
+}
+
+interface NotificationDeliveryLogResponse {
+  logs: NotificationDeliveryLog[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 interface UserListResponse {
   users: AdminUserRecord[];
@@ -27,6 +56,13 @@ interface SuspendReactivateResponse {
 
 // Community Service isn't deployed in V1, so this proxies to something that's always down -
 // callers should expect a 503 in the current environment.
+interface ModerationReport {
+  id: string;
+  postId: string;
+  reason: string;
+  createdAt: string;
+}
+
 interface ModerationQueueResponse {
   reports: ModerationReport[];
   total: number;
@@ -46,6 +82,27 @@ interface AuditLogResponse {
   total: number;
   page: number;
   limit: number;
+}
+
+// GET /api/v1/admin/appointments — read-only, paginated platform register.
+export function fetchAdminAppointments(params: {
+  page?: number;
+  limit?: number;
+  status?: AppointmentStatus;
+}): Promise<AdminAppointmentListResponse> {
+  return apiFetch(`/api/v1/admin/appointments${toQueryString(params)}`);
+}
+
+// GET /api/v1/notifications/logs — admin-only delivery attempts across channels.
+export function fetchNotificationDeliveryLogs(params: {
+  page?: number;
+  limit?: number;
+  status?: string;
+  channel?: string;
+  eventType?: string;
+  userId?: string;
+}): Promise<NotificationDeliveryLogResponse> {
+  return apiFetch(`/api/v1/notifications/logs${toQueryString(params)}`);
 }
 
 // GET /api/v1/admin/users - proxies through User Service to Auth Service.
